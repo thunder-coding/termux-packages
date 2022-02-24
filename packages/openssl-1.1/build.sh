@@ -15,15 +15,6 @@ TERMUX_PKG_REPLACES="openssl (<< 1.1.1m)"
 
 termux_step_pre_configure() {
 	test -d $TERMUX_PREFIX/include/openssl && mv $TERMUX_PREFIX/include/openssl{,.tmp} || :
-
-	test -a $TERMUX_PREFIX/lib/pkgconfig/libcrypto.pc && mv $TERMUX_PREFIX/lib/pkgconfig/libcrypto.pc{,.tmp} || :
-	test -a $TERMUX_PREFIX/lib/pkgconfig/libssl.pc && mv $TERMUX_PREFIX/lib/pkgconfig/libssl.pc{,.tmp} || :
-	test -a $TERMUX_PREFIX/lib/pkgconfig/openssl.pc && mv $TERMUX_PREFIX/lib/pkgconfig/openssl.pc{,.tmp} || :
-
-	test -a $TERMUX_PREFIX/lib/libcrypto.so && mv $TERMUX_PREFIX/lib/libcrypto.so{,.tmp} || :
-	test -a $TERMUX_PREFIX/lib/libssl.so && mv $TERMUX_PREFIX/lib/libssl.so{,.tmp} || :
-	test -a $TERMUX_PREFIX/lib/libcrypto.a && mv $TERMUX_PREFIX/lib/libcrypto.a{,.tmp} || :
-	test -a $TERMUX_PREFIX/lib/libssl.a && mv $TERMUX_PREFIX/lib/libssl.a{,.tmp} || :
 }
 
 termux_step_configure() {
@@ -43,9 +34,13 @@ termux_step_configure() {
 	test $TERMUX_ARCH = "aarch64" && TERMUX_OPENSSL_PLATFORM="android-arm64"
 	test $TERMUX_ARCH = "i686" && TERMUX_OPENSSL_PLATFORM="android-x86"
 	test $TERMUX_ARCH = "x86_64" && TERMUX_OPENSSL_PLATFORM="android-x86_64"
+
+	install -m755 -d $TERMUX_PREFIX/lib/openssl-1.1
+
 	./Configure $TERMUX_OPENSSL_PLATFORM \
 		--prefix=$TERMUX_PREFIX \
 		--openssldir=$TERMUX_PREFIX/etc/tls \
+		--libdir=$TERMUX_PREFIX/lib/openssl-1.1 \
 		shared \
 		zlib-dynamic \
 		no-ssl \
@@ -70,44 +65,12 @@ termux_step_make_install() {
 	install -m755 -d $TERMUX_PREFIX/include/openssl-1.1
 	mv $TERMUX_PREFIX/include/openssl $TERMUX_PREFIX/include/openssl-1.1/
 	mv $TERMUX_PREFIX/bin/openssl $TERMUX_PREFIX/bin/openssl-1.1
-
-	install -m755 -d $TERMUX_PREFIX/lib/openssl-1.1
-	rm $TERMUX_PREFIX/lib/libcrypto.so $TERMUX_PREFIX/lib/libssl.so
-	mv $TERMUX_PREFIX/lib/libcrypto.so.1.1 $TERMUX_PREFIX/lib/openssl-1.1
-	mv $TERMUX_PREFIX/lib/libssl.so.1.1 $TERMUX_PREFIX/lib/openssl-1.1
-	mv $TERMUX_PREFIX/lib/libcrypto.a $TERMUX_PREFIX/lib/openssl-1.1
-	mv $TERMUX_PREFIX/lib/libssl.a $TERMUX_PREFIX/lib/openssl-1.1
-	
-	install -m755 -d $TERMUX_PREFIX/lib/pkgconfig/openssl-1.1
-	mv $TERMUX_PREFIX/lib/pkgconfig/openssl.pc $TERMUX_PREFIX/lib/pkgconfig/openssl-1.1
-	mv $TERMUX_PREFIX/lib/pkgconfig/libssl.pc $TERMUX_PREFIX/lib/pkgconfig/openssl-1.1
-	mv $TERMUX_PREFIX/lib/pkgconfig/libcrypto.pc $TERMUX_PREFIX/lib/pkgconfig/openssl-1.1
-
-
-	sed -e 's|/include$|/include/openssl-1.1|' -i $TERMUX_PREFIX/lib/pkgconfig/openssl-1.1/*.pc
 }
 
 termux_step_post_make_install() {
 	test -d $TERMUX_PREFIX/include/openssl.tmp && mv $TERMUX_PREFIX/include/openssl{.tmp,} || :
-
-	test -a $TERMUX_PREFIX/lib/pkgconfig/libcrypto.pc.tmp && mv $TERMUX_PREFIX/lib/pkgconfig/libcrypto.pc{.tmp,} || :
-	test -a $TERMUX_PREFIX/lib/pkgconfig/libssl.pc.tmp && mv $TERMUX_PREFIX/lib/pkgconfig/libssl.pc{.tmp,} || :
-	test -a $TERMUX_PREFIX/lib/pkgconfig/openssl.pc.tmp && mv $TERMUX_PREFIX/lib/pkgconfig/openssl.pc{.tmp,} || :
-
-	test -a $TERMUX_PREFIX/lib/libcrypto.so.tmp && mv $TERMUX_PREFIX/lib/libcrypto.so{.tmp,} || :
-	test -a $TERMUX_PREFIX/lib/libssl.so.tmp && mv $TERMUX_PREFIX/lib/libssl.so{.tmp,} || :
-	test -a $TERMUX_PREFIX/lib/libcrypto.a.tmp && mv $TERMUX_PREFIX/lib/libcrypto.a{.tmp,} || :
-	test -a $TERMUX_PREFIX/lib/libssl.a.tmp && mv $TERMUX_PREFIX/lib/libssl.a{.tmp,} || :
-
 }
 
 termux_step_post_massage() {
 	rm -rf include/openssl
-	rm -f lib/pkgconfig/libcrypto.pc
-	rm -f lib/pkgconfig/libssl.pc
-	rm -f lib/pkgconfig/openssl.pc
-	rm -f lib/libcrypto.so
-	rm -f lib/libssl.so
-	rm -f lib/libcrypto.a
-	rm -f lib/libssl.a
 }
