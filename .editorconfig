@@ -33,3 +33,11 @@ indent_size = 2
 
 [ndk-patches/*.h]
 indent_style = tab
+
+[.devcontainer/*/Dockerfile]
+indent_style = space
+indent_size = 2
+
+[.devcontainer/*/devcontainer.json]
+indent_style = space
+indent_size = 2
