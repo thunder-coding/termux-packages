@@ -216,8 +216,8 @@ for (let i = 0; i < archs.length; i++) {
     console.log("```");
     console.log(results[i].errors.join("\n"));
     console.log("")
-    console.log("</details>");
     console.log("```");
+    console.log("</details>");
 
     console.log("\n\n");
 
@@ -226,8 +226,8 @@ for (let i = 0; i < archs.length; i++) {
     console.log("");
     console.log("```sh");
     console.log(results[i].proposedFixes.join("\n"));
-    console.log("```");
     console.log("")
+    console.log("```");
     console.log("</details>");
     console.log("\n\n\n\n");
     hasErrors = true;
