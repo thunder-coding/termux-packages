@@ -9,7 +9,7 @@ permissions: {} # none
 
 jobs:
   check-repository-health:
-    permission:
+    permissions:
       contents: write
       issues: write
     runs-on: ubuntu-latest
