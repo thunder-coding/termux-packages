@@ -218,7 +218,6 @@ for (let i = 0; i < archs.length; i++) {
     console.log(results[i].errors.join("\n"));
     console.log(`</details>`)
     console.log("```");
-    console.log(`<details>`)
 
     console.log("\n\n");
 
