@@ -208,7 +208,7 @@ let hasErrors = false;
 
 for (let i = 0; i < archs.length; i++) {
   if (results[i].errors.length > 0) {
-    console.log(`### Errors found for ${arch}`)
+    console.log(`### Errors found for ${archs[i]}`)
 
     console.log(`<details>`)
     console.log(`  <summary>`)
