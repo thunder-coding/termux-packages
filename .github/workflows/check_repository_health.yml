@@ -24,7 +24,7 @@ jobs:
           ./scripts/check-repository-health.js | tee repository-health.txt
       - name: Create issue if health check fails
         env:
-          GITHUB_TOKEN: ${{ secrets.TERMUXBOT2_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         if: failure()
         run: |
           ISSUE_TITLE="Repository Health Check Failed"
