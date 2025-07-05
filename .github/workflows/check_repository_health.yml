@@ -9,6 +9,9 @@ permissions: {} # none
 
 jobs:
   check-repository-health:
+    permission:
+      contents: write
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
