@@ -9,6 +9,9 @@ permissions: {} # none
 
 jobs:
   check-repository-health:
+    permissions:
+      issues: write
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -27,9 +30,9 @@ jobs:
           ./scripts/check-repository-health.js "${{ steps.generate-apt-packages-list.outputs.OUTPUT_DIR }}" | tee repository-health.txt
       - name: Create issue if health check fails
         env:
-          GITHUB_TOKEN: ${{ secrets.TERMUXBOT2_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         if: failure()
         run: |
-
+          ISSUE_TITLE="Repository Health Check Failed"
           ISSUE_BODY=$(cat repository-health.txt)
           gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY" --label "health-check" --assignee "thunder-coding"
